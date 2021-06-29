@@ -13,24 +13,24 @@ public class HelloServlet extends HttpServlet {
     /**
      * 해당 서블릿이 호출되면 실행되는 메소드
      *
-     * @param req
-     * @param resp
+     * @param request
+     * @param response
      * @throws ServletException
      * @throws IOException
      */
     @Override
-    protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("HelloServlet.service");
-        System.out.println("req = " + req);
-        System.out.println("resp = " + res);
+        System.out.println("req = " + request);
+        System.out.println("resp = " + response);
 
         // 요청 파라미터 출력
-        String username = req.getParameter("username");
+        String username = request.getParameter("username");
         System.out.println("username = " + username);
 
         // 응답 출력
-        res.setContentType("text/plain");
-        res.setCharacterEncoding("UTF-8");
-        res.getWriter().write("Hello " + username);
+        response.setContentType("text/plain");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write("Hello " + username);
     }
 }
