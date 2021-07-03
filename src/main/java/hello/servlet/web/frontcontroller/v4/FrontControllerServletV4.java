@@ -1,10 +1,9 @@
-package hello.servlet.web.frontcontroller.v3;
+package hello.servlet.web.frontcontroller.v4;
 
-import hello.servlet.web.frontcontroller.ModelView;
 import hello.servlet.web.frontcontroller.MyView;
-import hello.servlet.web.frontcontroller.v3.controller.MemberFormControllerV3;
-import hello.servlet.web.frontcontroller.v3.controller.MemberListControllerV3;
-import hello.servlet.web.frontcontroller.v3.controller.MemberSaveControllerV3;
+import hello.servlet.web.frontcontroller.v4.controller.MemberFormControllerV4;
+import hello.servlet.web.frontcontroller.v4.controller.MemberListControllerV4;
+import hello.servlet.web.frontcontroller.v4.controller.MemberSaveControllerV4;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -16,26 +15,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * FrontController - V3(Model 추가)
+ * FrontController - V4(실용적인 컨트롤러 구현)
+ * ModelView를 사용하지 않는게 특징임.
  */
-@WebServlet(name = "frontControllerServletV3", urlPatterns = "/front-controller/v3/*")
-public class FrontControllerServletV3 extends HttpServlet {
+@WebServlet(name = "frontControllerServletV4", urlPatterns = "/front-controller/v4/*")
+public class FrontControllerServletV4 extends HttpServlet {
 
     // URL 매핑정보 저장 Map
-    private Map<String, ControllerV3> controllerMap = new HashMap<>();
+    private Map<String, ControllerV4> controllerMap = new HashMap<>();
 
-    public FrontControllerServletV3() {
-        controllerMap.put("/front-controller/v3/members/new-form", new MemberFormControllerV3());
-        controllerMap.put("/front-controller/v3/members/save", new MemberSaveControllerV3());
-        controllerMap.put("/front-controller/v3/members", new MemberListControllerV3());
+    public FrontControllerServletV4() {
+        controllerMap.put("/front-controller/v4/members/new-form", new MemberFormControllerV4());
+        controllerMap.put("/front-controller/v4/members/save", new MemberSaveControllerV4());
+        controllerMap.put("/front-controller/v4/members", new MemberListControllerV4());
     }
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("FrontControllerServletV3.service");
+        System.out.println("FrontControllerServletV4.service");
 
         String requestURI = request.getRequestURI(); // 요청 URL 정보
-        ControllerV3 controller = controllerMap.get(requestURI);
+        ControllerV4 controller = controllerMap.get(requestURI);
 
         if (requestURI == null) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -43,11 +43,11 @@ public class FrontControllerServletV3 extends HttpServlet {
 
         // paramMap
         Map<String, String> paramMap = createParamMap(request);
-        ModelView mv = controller.process(paramMap);
-        String viewName = mv.getViewName(); // 논리 이름
-        MyView view = viewResolver(viewName); // 물리 이름
+        Map<String, Object> model = new HashMap<>(); // 프론트 컨트롤러에서 URL에 매핑된 컨트롤러를 실행시켜 Model을 만들기 위해 추가
+        String viewName = controller.process(paramMap, model);
+        MyView view = viewResolver(viewName);
 
-        view.render(mv.getModel(), request, response);
+        view.render(model, request, response);
     }
 
     /**
