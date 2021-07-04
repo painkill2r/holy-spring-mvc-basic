@@ -29,11 +29,11 @@ public class FrontControllerServletV5 extends HttpServlet {
     private final List<MyHandlerAdapter> handlerAdapters = new ArrayList<>(); // 여러 핸들러 어탭터를 담을 수 있는 List 선언
 
     public FrontControllerServletV5() {
-        initHandlerMapping();
+        initHandlerMappings();
         initHandlerAdapters();
     }
 
-    private void initHandlerMapping() {
+    private void initHandlerMappings() {
         // V3 추가
         handlerMappingMap.put("/front-controller/v5/v3/members/new-form", new MemberFormControllerV3());
         handlerMappingMap.put("/front-controller/v5/v3/members/save", new MemberSaveControllerV3());
